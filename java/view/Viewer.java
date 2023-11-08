@@ -19,6 +19,40 @@ public class Viewer {
     this.sc = new Scanner(System.in);
   }
 
+  public void printMessage(String message) {
+    System.out.println(message);
+  }
+
+  private final Scanner scanner = new Scanner(System.in);
+
+    public String getStringInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.next();
+    }
+
+    public int getIntInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextInt();
+    }
+
+    public void displayMessage(String message) {
+        System.out.println(message);
+    }
+
+    public void displayErrorMessage(String message) {
+      System.out.println(message);
+  }
+
+  public String getMemberId() {
+    System.out.print("Enter the ID of the member who owns the item: ");
+    return scanner.next();
+}
+
+public String getItemId() {
+    System.out.print("Enter the ID of the item to view: ");
+    return scanner.next();
+}
+
   public int mainMenu(){
     System.out.println("----------------------");
     System.out.println("Choose an option: ");
@@ -65,6 +99,13 @@ public class Viewer {
     System.out.println("2.Exit");
     int choice = sc.nextInt();
     return choice;
+  }
+
+
+  public String getInput(String prompt) {
+    System.out.print(prompt);
+    Scanner scanner = new Scanner(System.in);
+    return scanner.next();
   }
 
 
@@ -160,37 +201,6 @@ private Member getMemberById(Member member2, List<Member> members) {
     }
 }
 
-public Contract createContract() {
-  System.out.println("----------------------");
-  System.out.println("Create a New Contract:");
-
-  // Prompt for item details
-  System.out.print("Enter Item Name: ");
-  String itemName = sc.nextLine();
-
-  // Prompt for lender details
-  System.out.print("Enter Lender Name: ");
-  String lenderName = sc.nextLine();
-
-  // Prompt for borrower details
-  System.out.print("Enter Borrower Name: ");
-  String borrowerName = sc.nextLine();
-
-  // Prompt for cost, start date, and end date
-  System.out.print("Enter Cost: ");
-  int cost = sc.nextInt();
-  System.out.print("Enter Start Date: ");
-  int startDate = sc.nextInt();
-  System.out.print("Enter End Date: ");
-  int endDate = sc.nextInt();
-
-  // Create a new Contract instance
-  Item item = new Item(itemName, "X", "X", 1);
-  Member lender = new Member(lenderName, "lender@mail.com", "1234");
-  Member borrower = new Member(borrowerName, "borrower@mail.com", "4321");
-
-  return new Contract(item, startDate, endDate, cost, borrower, lender);
-}
 
 public void listAllItemsAndInfo(List<Member> members) {
   for (Member member : members) {
@@ -207,4 +217,36 @@ public void listAllItemsAndInfo(List<Member> members) {
   }
 }
 
+public void displayItemAndContractsInformation(Item item, MemberList memberList) {
+  // Display item information
+  System.out.println("Item Information:");
+  System.out.println("ID: " + item.getItemId());
+  System.out.println("Name: " + item.getItemName());
+  System.out.println("Description: " + item.getDescription());
+  System.out.println("Category: " + item.getCategory());
+  System.out.println("Cost per day: " + item.getCostDaily());
+
+  // Retrieve the owner's information using ownerId
+  Member owner = memberList.getMemberById(item.getOwnerId());
+  if (owner != null) {
+      System.out.println("Owner: " + owner.getName());
+  } else {
+      System.out.println("Owner not found");
+  }
+
+  // Display contracts information
+  System.out.println("\nContracts:");
+  if (item.getContracts().isEmpty()) {
+      System.out.println("No contracts available for this item.");
+  } else {
+      for (Contract contract : item.getContracts()) {
+        System.out.println("Lent to: " + contract.getborrower());
+        System.out.println("Lender: " + contract.getOwner());
+        System.out.println("Start Date: " + contract.getStartDate());
+        System.out.println("End Date: " + contract.getEndDate());
+        // ... (display other contract properties as needed)
+        System.out.println("-----");
+      }
+  }
+}
 }

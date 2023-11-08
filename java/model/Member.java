@@ -32,6 +32,16 @@ public class Member {
     this.ownedItems = new ArrayList<>();
     this.currentContracts = new ArrayList<>();
   }
+  
+  @Override
+public String toString() {
+    return "Member{" +
+            "name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", phone='" + mobile + '\'' +
+            ", id='" + memberId + '\'' +
+            '}';
+}
 
   // Getters
   public String getMemberId() {
@@ -168,6 +178,15 @@ public class Member {
 
 public void addContract(Contract contract) {
   currentContracts.add(contract);
+}
+
+  public Item getItemById(String itemId) {
+    for (Item item : ownedItems) {
+      if (item.getItemId().equals(itemId)) {
+        return item; // Return the item if the ID matches
+    }
+  }
+    return null; // Return null if no item found with the given ID
 }
 
 }

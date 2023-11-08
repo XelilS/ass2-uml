@@ -16,20 +16,134 @@ import view.Viewer;
 public class ControlTower {
   private Viewer viewer = new Viewer();
   private MemberList memberlist = new MemberList();
+
   
+  //constructor.
+  public ControlTower(Viewer viewer, MemberList memberList) {
+  }
+
+
+  /**
+   * Methods.
+   */
+  public void createMember() {
+    String name = viewer.getInput("Enter name: ");
+    String email = viewer.getInput("Enter email: ");
+    String mobile = viewer.getInput("Enter mobile number: ");
+
+    Member newMember = new Member(name, email, mobile);
+    memberlist.addMember(newMember);
+    viewer.displayMessage("Member created successfully.");
+}
+
+public void removeMember() {
+  String memberIdToRemove = viewer.getInput("Enter the ID of the member to remove: ");
+  memberlist.deleteMember(memberIdToRemove);
+  viewer.displayMessage("Member removed successfully.");
+}
+
+public void updateMember() {
+  String memberIdToUpdate = viewer.getInput("Enter the ID of the member to update: ");
+
+  if (memberlist.MemberExists(memberIdToUpdate)) {
+      String newName = viewer.getInput("Enter new name: ");
+      String newEmail = viewer.getInput("Enter new email: ");
+      String newMobile = viewer.getInput("Enter new mobile: ");
+
+      memberlist.changeMemberInformation(memberIdToUpdate, newName, newEmail, newMobile);
+      viewer.displayMessage("Member updated successfully.");
+  } else {
+      viewer.displayErrorMessage("Member not found with ID: " + memberIdToUpdate);
+  }
+}
+
+public void viewMemberInformation() {
+  String memberIdToView = viewer.getInput("Enter the ID of the member to view: ");
+  Member memberToView = memberlist.getMemberById(memberIdToView);
+
+  if (memberToView != null) {
+      viewer.displayMemberInformation(memberToView);
+  } else {
+      viewer.displayErrorMessage("Member not found with ID: " + memberIdToView);
+  }
+}
+
+public void createItem() {
+  String itemName = viewer.getInput("Enter item name: ");
+  String itemDescription = viewer.getInput("Enter item description: ");
+  String itemCategory = viewer.getInput("Enter item category: ");
+  int itemCost = viewer.getIntInput("Cost Daily(integer): ");
+
+  Item newItem = new Item(itemName, itemDescription, itemCategory, itemCost);
+
+  String ownerId = viewer.getInput("Choose owner using Id: ");
+  Member owner = memberlist.getMemberById(ownerId);
+
+  if (owner != null) {
+      owner.addItemToOwnedItems(newItem);
+      viewer.displayMessage("Item created successfully!");
+  } else {
+      viewer.displayMessage("Member not found with ID: " + ownerId);
+  }
+}
+
+public void deleteItem() {
+  String memberId = viewer.getInput("Enter the ID of the member who owns the item: ");
+  Member member = memberlist.getMemberById(memberId);
+
+  if (member != null) {
+      String itemId = viewer.getInput("Enter the ID of the item to delete: ");
+      if (member.deleteItemById(itemId)) {
+          viewer.displayMessage("Item deleted successfully.");
+      } else {
+          viewer.displayErrorMessage("Item not found.");
+      }
+  } else {
+      viewer.displayErrorMessage("Member not found.");
+  }
+}
+
+public void displayItemContracts() {
+  String memberId = viewer.getMemberId();
+  String itemId = viewer.getItemId();
+
+  Member member = memberlist.getMemberById(memberId);
+  if (member != null) {
+      Item item = member.getItemById(itemId);
+      if (item != null) {
+          viewer.displayItemAndContractsInformation(item, memberlist);  // Assuming this method exists in Viewer
+      } else {
+          viewer.displayErrorMessage("Item with ID " + itemId + " not found for member with ID " + memberId);
+      }
+  } else {
+      viewer.displayErrorMessage("Member with ID " + memberId + " not found");
+  }
+}
+
+
+
   /**
    * Used to initiate.
    */
   public void start() {
-    Member member1 = new Member("Kante", "kant.E@hotmail.com", "1231233");
-    Member member2 = new Member("Carnold", "cant@hotmail.com", "3213211");
-    Item item = new Item("apple", "321", "a1b2", 1);
-    Item item1 = new Item("marcel", "123", "bbbb", 5);
+  Member member1 = new Member("Alice", "alice@example.com", "123");
+  Member member2 = new Member("Bob", "bob@example.com", "321");
 
-    member1.addItemToOwnedItems(item);
-    member2.addItemToOwnedItems(item1);
-    memberlist.addMember(member1);
-    memberlist.addMember(member2);
+  Item item1 = new Item("Laptop", "A performance laptop", "Electronics", 20);
+  Item item2 = new Item("Bike", "A mountain bike", "Sports", 15);
+
+  member1.addItemToOwnedItems(item1);
+  member2.addItemToOwnedItems(item2);
+
+  Contract contract1 = new Contract(item1, member1, member2, 15, 20);
+
+  item1.addContract(contract1);
+  member1.addContract(contract1);
+  member2.addContract(contract1);
+
+  memberlist.addMember(member1);
+  memberlist.addMember(member2);
+
 
 
     viewer.initial();
@@ -42,19 +156,7 @@ public class ControlTower {
           switch (choice1) {
             case 1:
                 // Create a member by asking for inputs
-                System.out.print("Enter name: ");
-                String name = scanner.nextLine();
-
-                System.out.print("Enter email: ");
-                String email = scanner.nextLine();
-
-                System.out.print("Enter mobile number: ");
-                String mobile = scanner.nextLine();
-
-                // Create the member and add it to the member list
-                Member newMember = new Member(name, email, mobile);
-                memberlist.addMember(newMember);
-                System.out.println("Member created successfully.");
+                createMember();
                 break;
 
             case 2:
@@ -71,51 +173,21 @@ public class ControlTower {
                       break;
 
                   default:
-                  System.out.println("Incorrect input. Please try again.");
+                  viewer.displayErrorMessage("Incorrect input. Please try again.");
                       }
                         break;
             case 3:
-                System.out.print("Enter the ID of the member to remove: ");
-                String memberIdToRemove = scanner.nextLine();
-                memberlist.deleteMember(memberIdToRemove);
-                System.out.println("Member removed successfully.");
+              removeMember();
                 break;
 
             case 4:
                 // Case 4 logic to update a member's information
-                System.out.print("Enter the ID of the member to update: ");
-                String memberIdToUpdate = scanner.nextLine();
-
-                // Check if the member exists
-                if (memberlist.MemberExists(memberIdToUpdate)) {
-                    System.out.print("Enter new name: ");
-                    String newName = scanner.nextLine();
-                    System.out.print("Enter new email: ");
-                    String newEmail = scanner.nextLine();
-                    System.out.print("Enter new mobile: ");
-                    String newMobile = scanner.nextLine();
-
-                    // Update the member's information
-                            memberlist.changeMemberInformation(memberIdToUpdate, newName, newEmail, newMobile);
-                        } else {
-                            System.out.println("Member not found with ID: " + memberIdToUpdate);
-                        }
+                updateMember();
                     break;
 
             case 5:
                 // Case 5 logic to view full information of a specific member
-                System.out.print("Enter the ID of the member to view: ");
-                String memberIdToView = scanner.nextLine();
-
-                // Find the member by ID
-                Member memberToView = memberlist.getMemberById(memberIdToView);
-
-                if (memberToView != null) {
-                    // Display the member's information
-                    viewer.displayMemberInformation(memberToView);
-                } else {
-                    System.out.println("Member not found with ID: " + memberIdToView);
-                }
+                viewMemberInformation();
                 break;
                     
                     
@@ -129,8 +201,8 @@ public class ControlTower {
                         System.exit(0);
 
                     default:
-                        System.out.println("Incorrect input. Please try again.");
-                }
+                      viewer.displayErrorMessage("Incorrect input. Please try again.");
+                      }
                 break;
                 //case 1 done.
   
@@ -139,30 +211,7 @@ public class ControlTower {
           switch (choice2) {
           case 1:
               // Case 1: Create an item
-              System.out.print("Enter item name: ");
-              String itemName = scanner.next();
-              
-              System.out.print("Enter item description: ");
-              String itemDescription = scanner.next();
-
-              System.out.print("Enter item category: ");
-              String itemCategory = scanner.next();
-
-              System.out.print("Cost Daily(integer): ");
-              Integer itemCost = scanner.nextInt();
-
-              //creation.
-                Item newItem = new Item(itemName,itemDescription, itemCategory, itemCost);
-
-              System.out.print("Choose owner using Id: ");
-              String owner = scanner.next();
-              Member member = memberlist.getMemberById(owner);
-              member.addItemToOwnedItems(newItem);
-
-                // Add the item to a member's item list (you need to determine which member owns the item)
-                // Example: member.addItem(newItem);
-
-                System.out.println("Item created successfully!");
+              createItem();
                   break;
 
               case 2:
@@ -172,14 +221,34 @@ public class ControlTower {
 
               case 3:
                 //delete item.
+                deleteItem();
                 break;
 
               case 4:
                 //change item info.
+                String ownerId = viewer.getInput("Enter the ID of the member who owns the item: ");
+                Member ownerr = memberlist.getMemberById(ownerId);
+                if (ownerr != null) {
+                  String itemId = viewer.getInput("Enter the ID of the item to update: ");
+                  Item itemToUpdate = ownerr.getItemById(itemId);
+                if (itemToUpdate != null) {
+                  String newName = viewer.getInput("Enter new name: ");
+                  String newDescription = viewer.getInput("Enter new description: ");
+                  String newCategory = viewer.getInput("Enter new category: ");
+                  int newCostDaily = Integer.parseInt(viewer.getInput("Enter new daily cost: "));
+                  itemToUpdate.changeItemInfo(newName, newDescription, newCategory, newCostDaily);
+                  viewer.displayMessage("Item information updated successfully.");
+                } else {
+                  viewer.displayMessage("Item not found.");
+                }
+                  } else {
+                  viewer.displayMessage("Member not found.");
+                }
                 break;
 
               case 5:
                 //list item contracts.
+                displayItemContracts();
                 break;
               }
 
@@ -188,62 +257,46 @@ public class ControlTower {
             
       case 3:
           // Create a new contract
-          System.out.println("Create a New Contract:");
+    String lenderId = viewer.getStringInput("Enter the lender ID: ");
+    Member lender = memberlist.getMemberById(lenderId);
 
-          // Prompt for item details
-          System.out.print("Enter Item Id: ");
-          String itemid = scanner.next();
-          Item tempItem = null;
+    if (lender != null) {
+        String itemId = viewer.getStringInput("Enter the item ID: ");
+        Item item = lender.getItemById(itemId);
 
-          for (Member member : memberlist.getAllMembers()) {
-              for (Item item2 : member.getOwnedItems()) {
-                  if (item2.getItemId().equals(itemid)) {
-                      tempItem = item2;
-                      break; // Exit the loop when the item is found
-                  }
-              }
-          }
+        if (item != null) {
+            String borrowerId = viewer.getStringInput("Enter the borrower ID: ");
+            Member borrower = memberlist.getMemberById(borrowerId);
 
-          if (tempItem == null) {
-              System.out.println("Item not found.");
-              break; // Exit the case
-          }
+            if (borrower != null) {
+                int startDate = viewer.getIntInput("Enter the start date: ");
+                int endDate = viewer.getIntInput("Enter the end date: ");
 
-          // Prompt for lender details
-          System.out.print("Enter Lender Id: ");
-          String lenderid = scanner.next();
-          Member lender = memberlist.getMemberById(lenderid);
-
-          // Prompt for borrower details
-          System.out.print("Enter Borrower Id: ");
-          String borrowerid = scanner.next();
-          Member borrower = memberlist.getMemberById(borrowerid);
-
-          // Prompt for cost, start date, and end date
-          System.out.print("Enter Cost: ");
-          int cost = scanner.nextInt();
-          System.out.print("Enter Start Date: ");
-          int startDate = scanner.nextInt();
-          System.out.print("Enter End Date: ");
-          int endDate = scanner.nextInt();
-
-          // Create the contract
-          Contract contract = new Contract(tempItem, cost, startDate, endDate, lender, borrower);
-          lender.addContract(contract);
-          borrower.addContract(contract);
-          tempItem.addContract(contract);
-
-          System.out.println("Contract created successfully.");
-          System.out.println("Lender's Contracts: " + lender.getContracts());
-          System.out.println("Borrower's Contracts: " + borrower.getContracts());
-          System.out.println("Item's Contracts: " + tempItem.getContracts());
+                Contract contract = new Contract(item, lender, borrower, startDate, endDate);
+                if (contract.isValid()) {  // Add this method to check if the contract is valid
+                    item.addContract(contract);
+                    lender.addContract(contract);
+                    borrower.addContract(contract);
+                    viewer.displayMessage("Contract created successfully.");
+                } else {
+                    viewer.displayMessage("Failed to create contract. Check the entered details and try again.");
+                }
+            } else {
+                viewer.displayMessage("Borrower not found.");
+            }
+        } else {
+            viewer.displayMessage("Item not found.");
+        }
+    } else {
+        viewer.displayMessage("Lender not found.");
+    }
           break;
 
       case 4:
         System.exit(0);
             
       default:
-        System.out.println("Incorrect input. Please try again.");
+        viewer.displayErrorMessage("Incorrect input. Please try again.");
       } 
     }
   }

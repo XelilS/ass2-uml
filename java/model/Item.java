@@ -111,4 +111,13 @@ public class Item {
     contracts.add(contract);
   }
 
+  public boolean isAvailable(int startDate, int endDate) {
+    for (Contract contract : contracts) {
+        if (!(endDate < contract.getStartDate() || startDate > contract.getEndDate())) {
+            return false;  // The item is not available as it overlaps with an existing contract
+        }
+    }
+    return true;  // The item is available
+}
+
 }
