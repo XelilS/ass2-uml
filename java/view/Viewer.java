@@ -60,6 +60,7 @@ public String getItemId() {
     System.out.println("2.Item");
     System.out.println("3.Create contract");
     System.out.println("4.Exit");
+    System.out.println("Any other number = back to main menu.");
     int choice = sc.nextInt();
     return choice;
   }

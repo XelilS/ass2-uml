@@ -82,18 +82,6 @@ public class MemberList {
     return null;
   }
 
-  // Helper method to get a contract associated with an item
-  private Contract getContractForItem(Item item) {
-      for (Member member : members) {
-          for (Contract contract : member.getContracts()) {
-              if (contract.getItem().equals(item)) {
-                  return contract;
-              }
-          }
-      }
-      return null; // Item is not currently lent
-  }
-
   /**
    * Method to check if the member exists in the list.
    */

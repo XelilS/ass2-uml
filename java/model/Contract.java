@@ -86,6 +86,7 @@ public String toString() {
 
     return true;
   }
+
   // getters
 
   public Item getItem() {

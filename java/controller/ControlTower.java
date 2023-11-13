@@ -126,23 +126,31 @@ public void displayItemContracts() {
    * Used to initiate.
    */
   public void start() {
-  Member member1 = new Member("Alice", "alice@example.com", "123");
-  Member member2 = new Member("Bob", "bob@example.com", "321");
 
-  Item item1 = new Item("Laptop", "A performance laptop", "Electronics", 20);
-  Item item2 = new Item("Bike", "A mountain bike", "Sports", 15);
+  Member m1 = new Member("Alice", "alice@example.com", "123");
+  Member m2 = new Member("Bob", "bob@example.com", "321");
+  Member m3 = new Member("Sid", "sid@example.com", "332211");
 
-  member1.addItemToOwnedItems(item1);
-  member2.addItemToOwnedItems(item2);
 
-  Contract contract1 = new Contract(item1, member1, member2, 15, 20);
+  Item laptop = new Item("laptop", "performance laptop", "electronic", 50);
+  Item bike = new Item("Bike", "A mountain bike", "Sports", 10);
 
-  item1.addContract(contract1);
-  member1.addContract(contract1);
-  member2.addContract(contract1);
+  m1.addItemToOwnedItems(laptop);
+  m1.addItemToOwnedItems(bike);
 
-  memberlist.addMember(member1);
-  memberlist.addMember(member2);
+  Contract contract1 = new Contract(bike, m1, m2, 5, 7);
+
+  bike.addContract(contract1);
+  m1.addContract(contract1);
+  m2.addContract(contract1);
+
+  memberlist.addMember(m1);
+  memberlist.addMember(m2);
+  memberlist.addMember(m3);
+
+  m1.addCredits(320);
+  m2.addCredits(100);
+  m3.addCredits(100);
 
 
 
@@ -297,6 +305,7 @@ public void displayItemContracts() {
             
       default:
         viewer.displayErrorMessage("Incorrect input. Please try again.");
+
       } 
     }
   }
