@@ -1,13 +1,12 @@
 package view;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 import model.Contract;
 import model.Item;
 import model.Member;
 import model.MemberList;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
 
 public class Viewer {
   private Scanner sc;
@@ -16,57 +15,87 @@ public class Viewer {
     System.out.println("The Stuff Lending System");
   }
 
+  /**
+   * Viewer.
+   */
   public Viewer() {
     this.sc = new Scanner(System.in);
   }
 
+  /**
+   * used to print a msg.
+   */
   public void printMessage(String message) {
     System.out.println(message);
   }
 
   private final Scanner scanner = new Scanner(System.in);
 
+  /**
+   * used to get a string input.
+   */
   public String getStringInput(String prompt) {
     System.out.print(prompt);
     return scanner.next();
   }
 
+  /**
+   * used to get an integer input.
+   */
   public int getIntInput(String prompt) {
     System.out.print(prompt);
     return scanner.nextInt();
   }
 
+  /**
+   * displays a msg.
+   */
   public void displayMessage(String message) {
     System.out.println(message);
   }
 
+  /**
+   * displays a msg.
+   */
   public void displayErrorMessage(String message) {
     System.out.println(message);
   }
 
+  /**
+   * displays a msg and asks for an input.
+   */
   public String getMemberId() {
     System.out.print("Enter the ID of the member who owns the item: ");
     return scanner.next();
   }
 
+  /**
+   * displays a msg and asks for an input.
+   */
   public String getItemId() {
     System.out.print("Enter the ID of the item to view: ");
     return scanner.next();
   }
 
+  /**
+   * displays the main menu of choices.
+   */
   public int mainMenu() {
     System.out.println("----------------------");
     System.out.println("Choose an option: ");
     System.out.println("1.Member");
     System.out.println("2.Item");
     System.out.println("3.Create contract");
-    System.out.println("4. Advance day");
+    System.out.println("4.Advance day");
     System.out.println("5.Exit");
     System.out.println("Any other number = back to main menu.");
     int choice = sc.nextInt();
     return choice;
   }
 
+  /**
+   * displays the choices related to members.
+   */
   public int memberMenu() {
     System.out.println("----------------------");
     System.out.println("Choose an option: ");
@@ -81,6 +110,9 @@ public class Viewer {
     return choice;
   }
 
+  /**
+   * displays the choices related to items.
+   */
   public int itemMenu() {
     System.out.println("----------------------");
     System.out.println("Choose an option: ");
@@ -94,6 +126,9 @@ public class Viewer {
     return choice;
   }
 
+    /**
+   * displays options.
+   */
   public int menuIds() {
     System.out.println("----------------------");
     System.out.println("Choose an option: ");
@@ -103,6 +138,9 @@ public class Viewer {
     return choice;
   }
 
+  /**
+   * used to get an input.
+   */
   public String getInput(String prompt) {
     System.out.print(prompt);
     Scanner scanner = new Scanner(System.in);
@@ -173,7 +211,9 @@ public class Viewer {
     return null; // Member with the specified ID not found
   }
 
-  // Method to display member's information
+  /**
+   * displays member info.
+   */
   public void displayMemberInformation(Member member) {
     System.out.println("----------------------");
     System.out.println("Member Information:");
@@ -185,6 +225,9 @@ public class Viewer {
     // You can display other member information as needed
   }
 
+  /**
+   * displays member info.
+   */
   public void listFullInfo(List<Member> members) {
     System.out.println("----------------------");
     System.out.println("List of Members (Id, Name, Email):");
@@ -196,6 +239,9 @@ public class Viewer {
     }
   }
 
+  /**
+   * displays member and item info.
+   */
   public void listAllItemsAndInfo(List<Member> members) {
     for (Member member : members) {
       System.out.println("Member Name: " + member.getName());
@@ -211,6 +257,9 @@ public class Viewer {
     }
   }
 
+  /**
+   * displays item and contract info.
+   */
   public void displayItemAndContractsInformation(Item item, MemberList memberList) {
     // Display item information
     System.out.println("Item Information:");

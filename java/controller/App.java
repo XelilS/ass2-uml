@@ -22,9 +22,8 @@ public class App {
 
     Viewer viewer = new Viewer();
     MemberList memberList = new MemberList();
-    Time time = new Time();
 
-    ControlTower controller = new ControlTower(viewer, memberList, time);
+    ControlTower controller = new ControlTower(viewer, memberList);
     controller.start();
   }
 }

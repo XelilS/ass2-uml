@@ -1,15 +1,15 @@
 package controller;
 
-import model.Time;
+import javax.swing.text.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import javax.swing.text.View;
 import model.Contract;
 import model.Item;
 import model.Member;
 import model.MemberList;
 import view.Viewer;
+import model.Time;
 
 /**
  * setters and code changers.
@@ -20,8 +20,8 @@ public class ControlTower {
   private Time time;
 
   // constructor.
-  public ControlTower(Viewer viewer, MemberList memberList, Time time) {
-    this.time = time;
+  public ControlTower(Viewer viewer, MemberList memberList) {
+    this.time = memberList.getTime();
   }
 
   /**
@@ -41,7 +41,9 @@ public class ControlTower {
     }
   }
 
-  // used to remove a member.
+  /**
+   * used to remove a member.
+   */
   public void removeMember() {
     String memberIdToRemove = viewer.getInput("Enter the ID of the member to remove: ");
 
@@ -54,10 +56,13 @@ public class ControlTower {
     }
   }
 
+  /**
+   * updates a members info.
+   */
   public void updateMember() {
     String memberIdToUpdate = viewer.getInput("Enter the ID of the member to update: ");
 
-    if (memberlist.MemberExists(memberIdToUpdate)) {
+    if (memberlist.memberExists(memberIdToUpdate)) {
       String newName = viewer.getInput("Enter new name: ");
       String newEmail = viewer.getInput("Enter new email: ");
       String newMobile = viewer.getInput("Enter new mobile: ");
@@ -69,6 +74,9 @@ public class ControlTower {
     }
   }
 
+  /**
+   * used to view members info.
+   */
   public void viewMemberInformation() {
     String memberIdToView = viewer.getInput("Enter the ID of the member to view: ");
     Member memberToView = memberlist.getMemberById(memberIdToView);
@@ -80,6 +88,9 @@ public class ControlTower {
     }
   }
 
+  /**
+   * used to create an item for a member.
+   */
   public void createItem() {
     String itemName = viewer.getInput("Enter item name: ");
     String itemDescription = viewer.getInput("Enter item description: ");
@@ -97,6 +108,9 @@ public class ControlTower {
     }
   }
 
+  /**
+   * used to delete an item.
+   */
   public void deleteItem() {
     String memberId = viewer.getInput("Enter the ID of the member who owns the item: ");
     Member member = memberlist.getMemberById(memberId);
@@ -113,6 +127,9 @@ public class ControlTower {
     }
   }
 
+  /**
+   * used to display the contracts for an item.
+   */
   public void displayItemContracts() {
     String memberId = viewer.getMemberId();
     String itemId = viewer.getItemId();
@@ -142,19 +159,15 @@ public class ControlTower {
     Item laptop = m1.createItem("laptop", "performance laptop", "electronic", 50);
     Item bike = m1.createItem("Bike", "A mountain bike", "Sports", 10);
 
+    m1.addCredits(330);
+    m2.addCredits(100);
+    m3.addCredits(100);
+
     Contract contrac = new Contract(bike, m1, m3, 5, 7, time);
 
     bike.addContract(contrac);
     m1.addContract(contrac);
     m3.addContract(contrac);
-
-    memberlist.addMember(m1);
-    memberlist.addMember(m2);
-    memberlist.addMember(m3);
-
-    m1.addCredits(320);
-    m2.addCredits(100);
-    m3.addCredits(100);
 
     viewer.initial();
     Scanner scanner = new Scanner(System.in);
@@ -302,11 +315,14 @@ public class ControlTower {
           break;
 
         case 4:
-        // Advance the day
-        time.advanceDay(); // Assuming your Time class has an advanceDay method
-        viewer.displayMessage("Day advanced successfully.");
-        break;
-          
+          // Advance the day
+          time.advanceDay(); // Assuming your Time class has an advanceDay method
+          viewer.displayMessage("Day advanced successfully.");
+          int currentDay = time.getCurrentDay(); // Assuming 'time' is an instance of your Time class
+          viewer.displayMessage("Current day: " + currentDay);
+
+          break;
+
         case 5:
           System.exit(0);
 

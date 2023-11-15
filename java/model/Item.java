@@ -28,7 +28,7 @@ public class Item {
     this.name = name;
     this.description = description;
     this.category = category;
-    this.dayCreation = 0;
+    this.dayCreation = time.getCurrentDay();
     this.costDaily = costDaily;
     this.contracts = new ArrayList<>();
     this.time = time;

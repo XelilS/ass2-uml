@@ -28,7 +28,7 @@ public class Member {
     this.email = email;
     this.mobile = mobile;
     this.credits = 0;
-    this.creationDate = 0;
+    this.creationDate = time.getCurrentDay();
     this.ownedItems = new ArrayList<>();
     this.currentContracts = new ArrayList<>();
     this.time = time;
@@ -37,12 +37,12 @@ public class Member {
 
   @Override
   public String toString() {
-    return "Member{" +
-        "name='" + name + '\'' +
-        ", email='" + email + '\'' +
-        ", phone='" + mobile + '\'' +
-        ", id='" + memberId + '\'' +
-        '}';
+    return "Member{" 
+    + "name='" + name + '\'' 
+    + ", email='" + email + '\'' 
+    + ", phone='" + mobile + '\'' 
+    + ", id='" + memberId + '\'' 
+    + '}';
   }
 
   // Getters

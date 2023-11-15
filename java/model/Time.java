@@ -7,8 +7,8 @@ public class Time {
   // attribute(s)
   private int currentDay;
 
-  public Time() {
-    this.currentDay = 0; // Initialize the day counter to 0 when the system starts.
+  Time() {
+    currentDay = 0;
   }
 
   // Getter for currentDay
@@ -19,5 +19,10 @@ public class Time {
   // Method to advance the day
   public void advanceDay() {
     currentDay++;
+  }
+
+  // tostring.
+  public String toString() {
+    return "" + currentDay;
   }
 }

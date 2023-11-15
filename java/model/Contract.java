@@ -19,8 +19,6 @@ public class Contract {
    * Contract constructor.
    */
   public Contract(Item item, Member lender, Member borrower, int startDate, int endDate, Time time) {
-    // Check if the start date is not before the current day and the end date is
-    // after the start date
     if (startDate < time.getCurrentDay() || endDate < startDate) {
       System.out.println("Invalid contract dates.");
       return;
@@ -63,16 +61,19 @@ public class Contract {
 
   @Override
   public String toString() {
-    return "Contract{" +
-        "item=" + item +
-        ", cost=" + cost +
-        ", startDate=" + startDate +
-        ", endDate=" + endDate +
-        ", lender=" + lender.getName() + // Assuming you have a getName() method in Member class
-        ", borrower=" + borrower.getName() + // Same assumption
-        '}';
+    return "Contract{"
+        + "item=" + item
+        + ", cost=" + cost
+        + ", startDate=" + startDate
+        + ", endDate=" + endDate
+        + ", lender=" + lender.getName()
+        + ", borrower=" + borrower.getName()
+        + '}';
   }
 
+  /**
+   * checks the validity.
+   */
   public boolean isValid() {
     // Check if the lender has enough credits
     int totalCost = item.getCostDaily() * (endDate - startDate + 1);
@@ -89,8 +90,6 @@ public class Contract {
     if (startDate > endDate) {
       return false;
     }
-
-    // Add other validations as per your requirements
 
     return true;
   }

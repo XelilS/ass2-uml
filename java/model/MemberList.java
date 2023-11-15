@@ -13,8 +13,14 @@ public class MemberList {
   private List<Member> members = new ArrayList<>();
   private Set<String> registeredEmails = new HashSet<>();
   private Set<String> registeredMobiles = new HashSet<>();
-  Time time;
+  private Time time;
 
+  public MemberList() {
+    members = new ArrayList<>();
+    registeredEmails = new HashSet<>();
+    registeredMobiles = new HashSet<>();
+    time = new Time();
+  }
   /**
    * Method to register a member if it is unique.
    */
@@ -31,6 +37,9 @@ public class MemberList {
     return true;
   }
 
+  /**
+   * used to create a member directly for an owner.
+   */
   public Member memberCreation(String name, String email, String mobile) {
     String memberId;
     AlphaNumericGen ran = new AlphaNumericGen(); // Assuming you have a class for generating random alphanumeric strings
@@ -129,18 +138,6 @@ public class MemberList {
   }
 
   /**
-   * Method to check if the member exists in the list.
-   */
-  public boolean MemberExists(String memberId) {
-    for (Member member : members) {
-      if (member.getMemberId().equals(memberId)) {
-        return true; // Member with the specified ID exists
-      }
-    }
-    return false; // Member with the specified ID does not exist
-  }
-
-  /**
    * Method to check if an email is unique.
    */
   private boolean isEmailUnique(String email) {
@@ -153,9 +150,18 @@ public class MemberList {
   private boolean isMobileUnique(String mobile) {
     return !registeredMobiles.contains(mobile);
   }
-
+  /**
+   * get members.
+   */
   public List<Member> getAllMembers() {
     return members;
+  }
+
+  /**
+   * get time.
+   */
+  public Time getTime() {
+    return time;
   }
 
 }
