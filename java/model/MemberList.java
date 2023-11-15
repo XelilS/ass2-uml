@@ -10,16 +10,20 @@ import java.util.Set;
  */
 public class MemberList {
 
-  private List<Member> members = new ArrayList<>();
-  private Set<String> registeredEmails = new HashSet<>();
-  private Set<String> registeredMobiles = new HashSet<>();
+  //private List<Member> members = new ArrayList<>();
+  //private Set<String> registeredEmails = new HashSet<>();
+  //private Set<String> registeredMobiles = new HashSet<>();
   private Time time;
+  private List<Member> members;
+  private Set<String> registeredEmails;
+  private Set<String> registeredMobiles;
+
 
   public MemberList() {
-    members = new ArrayList<>();
-    registeredEmails = new HashSet<>();
-    registeredMobiles = new HashSet<>();
-    time = new Time();
+    this.members = new ArrayList<>();
+    this.registeredEmails = new HashSet<>();
+    this.registeredMobiles = new HashSet<>();
+    this.time = new Time();
   }
   /**
    * Method to register a member if it is unique.

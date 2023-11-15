@@ -179,6 +179,8 @@ public class Member {
 
   public void addContract(Contract contract) {
     currentContracts.add(contract);
+    int totCost = (contract.getItem().getCostDaily() * (contract.getEndDate() - contract.getStartDate()));
+    addCredits(-totCost);
   }
 
   public Item getItemById(String itemId) {

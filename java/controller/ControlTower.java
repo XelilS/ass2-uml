@@ -10,17 +10,18 @@ import model.Member;
 import model.MemberList;
 import view.Viewer;
 import model.Time;
-
 /**
  * setters and code changers.
  */
 public class ControlTower {
-  private Viewer viewer = new Viewer();
-  private MemberList memberlist = new MemberList();
+  private Viewer viewer;
+  private MemberList memberlist;
   private Time time;
 
   // constructor.
   public ControlTower(Viewer viewer, MemberList memberList) {
+    this.memberlist = new MemberList();
+    this.viewer = new Viewer();
     this.time = memberList.getTime();
   }
 
@@ -163,12 +164,6 @@ public class ControlTower {
     m2.addCredits(100);
     m3.addCredits(100);
 
-    Contract contrac = new Contract(bike, m1, m3, 5, 7, time);
-
-    bike.addContract(contrac);
-    m1.addContract(contrac);
-    m3.addContract(contrac);
-
     viewer.initial();
     Scanner scanner = new Scanner(System.in);
     while (true) {
@@ -294,7 +289,7 @@ public class ControlTower {
                 int startDate = viewer.getIntInput("Enter the start date: ");
                 int endDate = viewer.getIntInput("Enter the end date: ");
 
-                Contract contract = new Contract(item, lender, borrower, startDate, endDate, null);
+                Contract contract = new Contract(item, lender, borrower, startDate, endDate, time);
                 if (contract.isValid()) { // Add this method to check if the contract is valid
                   item.addContract(contract);
                   lender.addContract(contract);
