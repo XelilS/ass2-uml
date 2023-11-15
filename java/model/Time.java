@@ -1,11 +1,10 @@
 package model;
 
-
 /**
  * Time class.
  */
 public class Time {
-  //attribute(s)
+  // attribute(s)
   private int currentDay;
 
   public Time() {

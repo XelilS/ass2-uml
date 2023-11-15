@@ -16,13 +16,14 @@ public class Item {
   private int dayCreation;
   private int costDaily;
   private List<Contract> contracts;
+  private Time time;
 
   AlphaNumericGen ran = new AlphaNumericGen();
 
   /**
    * item constructor.
    */
-  public Item(String name, String description, String category, int costDaily) {
+  public Item(String name, String description, String category, int costDaily, Time time) {
     this.itemId = ran.generateAlphaNum(3);
     this.name = name;
     this.description = description;
@@ -30,10 +31,8 @@ public class Item {
     this.dayCreation = 0;
     this.costDaily = costDaily;
     this.contracts = new ArrayList<>();
+    this.time = time;
   }
-
-
-
 
   /**
    * Method to change item information.
@@ -45,7 +44,6 @@ public class Item {
     this.costDaily = costDaily;
     // You can update other properties if needed
   }
-
 
   // Getters
 
@@ -81,7 +79,7 @@ public class Item {
     return contracts;
   }
 
-  //setters
+  // setters
 
   public void setName(String name) {
     this.name = name;
@@ -113,11 +111,11 @@ public class Item {
 
   public boolean isAvailable(int startDate, int endDate) {
     for (Contract contract : contracts) {
-        if (!(endDate < contract.getStartDate() || startDate > contract.getEndDate())) {
-            return false;  // The item is not available as it overlaps with an existing contract
-        }
+      if (!(endDate < contract.getStartDate() || startDate > contract.getEndDate())) {
+        return false; // The item is not available as it overlaps with an existing contract
+      }
     }
-    return true;  // The item is available
-}
+    return true; // The item is available
+  }
 
 }

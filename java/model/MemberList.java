@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * Class used to keep track of member addition and deletion.
  */
@@ -14,6 +13,7 @@ public class MemberList {
   private List<Member> members = new ArrayList<>();
   private Set<String> registeredEmails = new HashSet<>();
   private Set<String> registeredMobiles = new HashSet<>();
+  Time time;
 
   /**
    * Method to register a member if it is unique.
@@ -31,6 +31,28 @@ public class MemberList {
     return true;
   }
 
+  public Member memberCreation(String name, String email, String mobile) {
+    String memberId;
+    AlphaNumericGen ran = new AlphaNumericGen(); // Assuming you have a class for generating random alphanumeric strings
+
+    do {
+      memberId = ran.generateAlphaNum(6); // Generate a new ID
+    } while (isMemberIdExists(memberId)); // Check if the ID already exists
+    Member member = new Member(name, email, mobile, memberId, time);
+    members.add(member);
+    return member; // Assuming Member constructor takes these parameters
+  }
+
+  private boolean isMemberIdExists(String memberId) {
+    // Iterate over your member list to check if memberId already exists
+    for (Member member : members) { // Assuming memberList is your list of members
+      if (member.getMemberId().equals(memberId)) {
+        return true; // ID already exists
+      }
+    }
+    return false; // ID is unique
+  }
+
   /**
    * Method to delete a member by member ID.
    */
@@ -46,6 +68,30 @@ public class MemberList {
     }
 
     // Member not found; deletion failed
+    return false;
+  }
+
+  /**
+   * Used to ensure uniqueness.
+   */
+  public boolean isEmailOrMobileExists(String email, String mobile) {
+    for (Member member : this.members) {
+      if (member.getEmail().equalsIgnoreCase(email) || member.getMobile().equals(mobile)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Ensures member existing.
+   */
+  public boolean memberExists(String memberId) {
+    for (Member member : this.members) {
+      if (member.getMemberId().equals(memberId)) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -87,13 +133,12 @@ public class MemberList {
    */
   public boolean MemberExists(String memberId) {
     for (Member member : members) {
-        if (member.getMemberId().equals(memberId)) {
-            return true; // Member with the specified ID exists
-        }
+      if (member.getMemberId().equals(memberId)) {
+        return true; // Member with the specified ID exists
+      }
     }
     return false; // Member with the specified ID does not exist
   }
-
 
   /**
    * Method to check if an email is unique.

@@ -1,5 +1,8 @@
 package controller;
+
 import java.lang.ModuleLayer.Controller;
+import model.Time;
+
 import javax.swing.text.View;
 import model.Contract;
 import model.Item;
@@ -13,14 +16,15 @@ import view.Viewer;
 public class App {
 
   /**
-   * Main. 
+   * Main.
    */
   public static void main(String[] args) {
 
     Viewer viewer = new Viewer();
     MemberList memberList = new MemberList();
+    Time time = new Time();
 
-    ControlTower controller = new ControlTower(viewer, memberList);
+    ControlTower controller = new ControlTower(viewer, memberList, time);
     controller.start();
   }
 }

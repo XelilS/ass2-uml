@@ -13,17 +13,17 @@ public class Member {
   private String mobile;
   private float credits;
   private List<Item> ownedItems;
-  private Integer creationDate;  
+  private Integer creationDate;
   private List<Contract> currentContracts;
+  private Time time;
 
   AlphaNumericGen ran = new AlphaNumericGen();
-
 
   /**
    * Member constructor.
    */
-  public Member(String name, String email, String mobile) {
-    this.memberId = ran.generateAlphaNum(6);
+  public Member(String name, String email, String mobile, String memberId, Time time) {
+    this.memberId = memberId;
     this.name = name;
     this.email = email;
     this.mobile = mobile;
@@ -31,17 +31,19 @@ public class Member {
     this.creationDate = 0;
     this.ownedItems = new ArrayList<>();
     this.currentContracts = new ArrayList<>();
+    this.time = time;
   }
-  
+
+
   @Override
-public String toString() {
+  public String toString() {
     return "Member{" +
-            "name='" + name + '\'' +
-            ", email='" + email + '\'' +
-            ", phone='" + mobile + '\'' +
-            ", id='" + memberId + '\'' +
-            '}';
-}
+        "name='" + name + '\'' +
+        ", email='" + email + '\'' +
+        ", phone='" + mobile + '\'' +
+        ", id='" + memberId + '\'' +
+        '}';
+  }
 
   // Getters
   public String getMemberId() {
@@ -74,9 +76,9 @@ public String toString() {
 
   public List<Contract> getContracts() {
     return currentContracts;
-}
+  }
 
-  //setters
+  // setters
   public void setMemberId(String memberId) {
     this.memberId = memberId;
   }
@@ -105,8 +107,6 @@ public String toString() {
     this.creationDate = creationDate;
   }
 
-
-
   /**
    * Add credits.
    */
@@ -134,7 +134,6 @@ public String toString() {
 
   }
 
-  
   /**
    * Deletion of items.
    */
@@ -148,45 +147,47 @@ public String toString() {
     }
 
     if (itemToDelete != null) {
-        ownedItems.remove(itemToDelete);
-        return true; // Item deleted successfully
+      ownedItems.remove(itemToDelete);
+      return true; // Item deleted successfully
     }
 
     return false; // Item not found
   }
 
-
   /**
    * Method to create an item for the member and add 100 credits.
    */
-  public void createItem(String itemName, String itemId, String itemDescription, String itemCategory, int itemCostDaily) {
+  public Item createItem(String itemName, String itemDescription, String itemCategory,
+      int itemCostDaily) {
     // Create the item
-    Item newItem = new Item(itemName, itemDescription, itemCategory, itemCostDaily);
+    Item newItem = new Item(itemName, itemDescription, itemCategory, itemCostDaily, time);
 
     // Add 100 credits to the member
     addCredits(100);
 
     // Add the item to the member's items list
     ownedItems.add(newItem);
+
+    return newItem;
   }
 
   public void updateMemberInformation(String name, String email, String mobile) {
     this.name = name;
     this.email = email;
     this.mobile = mobile;
-}
+  }
 
-public void addContract(Contract contract) {
-  currentContracts.add(contract);
-}
+  public void addContract(Contract contract) {
+    currentContracts.add(contract);
+  }
 
   public Item getItemById(String itemId) {
     for (Item item : ownedItems) {
       if (item.getItemId().equals(itemId)) {
         return item; // Return the item if the ID matches
+      }
     }
-  }
     return null; // Return null if no item found with the given ID
-}
+  }
 
 }

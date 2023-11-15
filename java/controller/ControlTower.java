@@ -1,5 +1,6 @@
 package controller;
 
+import model.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,12 +17,12 @@ import view.Viewer;
 public class ControlTower {
   private Viewer viewer = new Viewer();
   private MemberList memberlist = new MemberList();
+  private Time time;
 
-  
-  //constructor.
-  public ControlTower(Viewer viewer, MemberList memberList) {
+  // constructor.
+  public ControlTower(Viewer viewer, MemberList memberList, Time time) {
+    this.time = time;
   }
-
 
   /**
    * Methods.
@@ -31,128 +32,129 @@ public class ControlTower {
     String email = viewer.getInput("Enter email: ");
     String mobile = viewer.getInput("Enter mobile number: ");
 
-    Member newMember = new Member(name, email, mobile);
-    memberlist.addMember(newMember);
-    viewer.displayMessage("Member created successfully.");
-}
+    // Check if the email or mobile number already exists
+    if (memberlist.isEmailOrMobileExists(email, mobile)) {
+      viewer.displayMessage("Error: A member with this email or mobile number already exists.");
+    } else {
+      memberlist.memberCreation(name, email, mobile);
+      viewer.displayMessage("Member created successfully.");
+    }
+  }
 
-public void removeMember() {
-  String memberIdToRemove = viewer.getInput("Enter the ID of the member to remove: ");
-  memberlist.deleteMember(memberIdToRemove);
-  viewer.displayMessage("Member removed successfully.");
-}
+  // used to remove a member.
+  public void removeMember() {
+    String memberIdToRemove = viewer.getInput("Enter the ID of the member to remove: ");
 
-public void updateMember() {
-  String memberIdToUpdate = viewer.getInput("Enter the ID of the member to update: ");
+    // Check if the member with the given ID exists
+    if (memberlist.memberExists(memberIdToRemove)) {
+      memberlist.deleteMember(memberIdToRemove);
+      viewer.displayMessage("Member removed successfully.");
+    } else {
+      viewer.displayMessage("Error: No member found with the given ID.");
+    }
+  }
 
-  if (memberlist.MemberExists(memberIdToUpdate)) {
+  public void updateMember() {
+    String memberIdToUpdate = viewer.getInput("Enter the ID of the member to update: ");
+
+    if (memberlist.MemberExists(memberIdToUpdate)) {
       String newName = viewer.getInput("Enter new name: ");
       String newEmail = viewer.getInput("Enter new email: ");
       String newMobile = viewer.getInput("Enter new mobile: ");
 
       memberlist.changeMemberInformation(memberIdToUpdate, newName, newEmail, newMobile);
       viewer.displayMessage("Member updated successfully.");
-  } else {
+    } else {
       viewer.displayErrorMessage("Member not found with ID: " + memberIdToUpdate);
+    }
   }
-}
 
-public void viewMemberInformation() {
-  String memberIdToView = viewer.getInput("Enter the ID of the member to view: ");
-  Member memberToView = memberlist.getMemberById(memberIdToView);
+  public void viewMemberInformation() {
+    String memberIdToView = viewer.getInput("Enter the ID of the member to view: ");
+    Member memberToView = memberlist.getMemberById(memberIdToView);
 
-  if (memberToView != null) {
+    if (memberToView != null) {
       viewer.displayMemberInformation(memberToView);
-  } else {
+    } else {
       viewer.displayErrorMessage("Member not found with ID: " + memberIdToView);
+    }
   }
-}
 
-public void createItem() {
-  String itemName = viewer.getInput("Enter item name: ");
-  String itemDescription = viewer.getInput("Enter item description: ");
-  String itemCategory = viewer.getInput("Enter item category: ");
-  int itemCost = viewer.getIntInput("Cost Daily(integer): ");
+  public void createItem() {
+    String itemName = viewer.getInput("Enter item name: ");
+    String itemDescription = viewer.getInput("Enter item description: ");
+    String itemCategory = viewer.getInput("Enter item category: ");
+    int itemCost = viewer.getIntInput("Cost Daily(integer): ");
 
-  Item newItem = new Item(itemName, itemDescription, itemCategory, itemCost);
+    String ownerId = viewer.getInput("Choose owner using Id: ");
+    Member owner = memberlist.getMemberById(ownerId);
 
-  String ownerId = viewer.getInput("Choose owner using Id: ");
-  Member owner = memberlist.getMemberById(ownerId);
-
-  if (owner != null) {
-      owner.addItemToOwnedItems(newItem);
+    if (owner != null) {
+      owner.createItem(itemName, itemDescription, itemCategory, itemCost);
       viewer.displayMessage("Item created successfully!");
-  } else {
+    } else {
       viewer.displayMessage("Member not found with ID: " + ownerId);
+    }
   }
-}
 
-public void deleteItem() {
-  String memberId = viewer.getInput("Enter the ID of the member who owns the item: ");
-  Member member = memberlist.getMemberById(memberId);
+  public void deleteItem() {
+    String memberId = viewer.getInput("Enter the ID of the member who owns the item: ");
+    Member member = memberlist.getMemberById(memberId);
 
-  if (member != null) {
+    if (member != null) {
       String itemId = viewer.getInput("Enter the ID of the item to delete: ");
       if (member.deleteItemById(itemId)) {
-          viewer.displayMessage("Item deleted successfully.");
+        viewer.displayMessage("Item deleted successfully.");
       } else {
-          viewer.displayErrorMessage("Item not found.");
+        viewer.displayErrorMessage("Item not found.");
       }
-  } else {
+    } else {
       viewer.displayErrorMessage("Member not found.");
+    }
   }
-}
 
-public void displayItemContracts() {
-  String memberId = viewer.getMemberId();
-  String itemId = viewer.getItemId();
+  public void displayItemContracts() {
+    String memberId = viewer.getMemberId();
+    String itemId = viewer.getItemId();
 
-  Member member = memberlist.getMemberById(memberId);
-  if (member != null) {
+    Member member = memberlist.getMemberById(memberId);
+    if (member != null) {
       Item item = member.getItemById(itemId);
       if (item != null) {
-          viewer.displayItemAndContractsInformation(item, memberlist);  // Assuming this method exists in Viewer
+        viewer.displayItemAndContractsInformation(item, memberlist); // Assuming this method exists in Viewer
       } else {
-          viewer.displayErrorMessage("Item with ID " + itemId + " not found for member with ID " + memberId);
+        viewer.displayErrorMessage("Item with ID " + itemId + " not found for member with ID " + memberId);
       }
-  } else {
+    } else {
       viewer.displayErrorMessage("Member with ID " + memberId + " not found");
+    }
   }
-}
-
-
 
   /**
    * Used to initiate.
    */
   public void start() {
 
-  Member m1 = new Member("Alice", "alice@example.com", "123");
-  Member m2 = new Member("Bob", "bob@example.com", "321");
-  Member m3 = new Member("Sid", "sid@example.com", "332211");
+    Member m1 = memberlist.memberCreation("Alice", "alice@example.com", "123");
+    Member m2 = memberlist.memberCreation("Bob", "bob@example.com", "321");
+    Member m3 = memberlist.memberCreation("Sid", "sid@example.com", "332211");
 
+    Item laptop = m1.createItem("laptop", "performance laptop", "electronic", 50);
+    Item bike = m1.createItem("Bike", "A mountain bike", "Sports", 10);
 
-  Item laptop = new Item("laptop", "performance laptop", "electronic", 50);
-  Item bike = new Item("Bike", "A mountain bike", "Sports", 10);
+    Contract contrac = new Contract(bike, m1, m3, 5, 7, time);
 
-  m1.addItemToOwnedItems(laptop);
-  m1.addItemToOwnedItems(bike);
+    bike.addContract(contrac);
+    m1.addContract(contrac);
+    m3.addContract(contrac);
 
-  Contract contract1 = new Contract(bike, m1, m2, 5, 7);
+    memberlist.addMember(m1);
+    memberlist.addMember(m2);
+    memberlist.addMember(m3);
 
-  bike.addContract(contract1);
-  m1.addContract(contract1);
-  m2.addContract(contract1);
-
-  memberlist.addMember(m1);
-  memberlist.addMember(m2);
-  memberlist.addMember(m3);
-
-  m1.addCredits(320);
-  m2.addCredits(100);
-  m3.addCredits(100);
-
-
+    m1.addCredits(320);
+    m2.addCredits(100);
+    m3.addCredits(100);
 
     viewer.initial();
     Scanner scanner = new Scanner(System.in);
@@ -160,85 +162,84 @@ public void displayItemContracts() {
       int choice = viewer.mainMenu();
       switch (choice) {
         case 1:
-        int choice1 = viewer.memberMenu();
+          int choice1 = viewer.memberMenu();
           switch (choice1) {
             case 1:
-                // Create a member by asking for inputs
-                createMember();
-                break;
+              // Create a member by asking for inputs
+              createMember();
+              break;
 
             case 2:
-                List<Member> members = memberlist.getAllMembers(); // Retrieve all members from the model
-                viewer.listMembersSimple(members); // Call the Viewer's method
-                int choice2 = viewer.menuIds();
-                switch (choice2) {
-                  case 1:
-                      // Case 1: View all members (with IDs)
-                      viewer.listFullInfo(members);
-                      break;
-                  case 2:
-                      //return to menu
-                      break;
-
-                  default:
-                  viewer.displayErrorMessage("Incorrect input. Please try again.");
-                      }
-                        break;
-            case 3:
-              removeMember();
-                break;
-
-            case 4:
-                // Case 4 logic to update a member's information
-                updateMember();
-                    break;
-
-            case 5:
-                // Case 5 logic to view full information of a specific member
-                viewMemberInformation();
-                break;
-                    
-                    
-            case 6:
-                // Case: List members in a verbose way
-                List<Member> allMembers = memberlist.getAllMembers();
-                viewer.listMembersVerbose(allMembers);
-                break;
-
-                    case 7:
-                        System.exit(0);
-
-                    default:
-                      viewer.displayErrorMessage("Incorrect input. Please try again.");
-                      }
-                break;
-                //case 1 done.
-  
-      case 2:
-          int choice2 = viewer.itemMenu();
-          switch (choice2) {
-          case 1:
-              // Case 1: Create an item
-              createItem();
+              List<Member> members = memberlist.getAllMembers(); // Retrieve all members from the model
+              viewer.listMembersSimple(members); // Call the Viewer's method
+              int choice2 = viewer.menuIds();
+              switch (choice2) {
+                case 1:
+                  // Case 1: View all members (with IDs)
+                  viewer.listFullInfo(members);
+                  break;
+                case 2:
+                  // return to menu
                   break;
 
-              case 2:
+                default:
+                  viewer.displayErrorMessage("Incorrect input. Please try again.");
+              }
+              break;
+            case 3:
+              removeMember();
+              break;
+
+            case 4:
+              // Case 4 logic to update a member's information
+              updateMember();
+              break;
+
+            case 5:
+              // Case 5 logic to view full information of a specific member
+              viewMemberInformation();
+              break;
+
+            case 6:
+              // Case: List members in a verbose way
+              List<Member> allMembers = memberlist.getAllMembers();
+              viewer.listMembersVerbose(allMembers);
+              break;
+
+            case 7:
+              System.exit(0);
+
+            default:
+              viewer.displayErrorMessage("Incorrect input. Please try again.");
+          }
+          break;
+        // case 1 done.
+
+        case 2:
+          int choice2 = viewer.itemMenu();
+          switch (choice2) {
+            case 1:
+              // Case 1: Create an item
+              createItem();
+              break;
+
+            case 2:
               List<Member> members = memberlist.getAllMembers(); // Retrieve all members from the model
               viewer.listAllItemsAndInfo(members);
               break;
 
-              case 3:
-                //delete item.
-                deleteItem();
-                break;
+            case 3:
+              // delete item.
+              deleteItem();
+              break;
 
-              case 4:
-                //change item info.
-                String ownerId = viewer.getInput("Enter the ID of the member who owns the item: ");
-                Member ownerr = memberlist.getMemberById(ownerId);
-                if (ownerr != null) {
-                  String itemId = viewer.getInput("Enter the ID of the item to update: ");
-                  Item itemToUpdate = ownerr.getItemById(itemId);
+            case 4:
+              // change item info.
+              String ownerId = viewer.getInput("Enter the ID of the member who owns the item: ");
+              Member ownerr = memberlist.getMemberById(ownerId);
+              if (ownerr != null) {
+                String itemId = viewer.getInput("Enter the ID of the item to update: ");
+                Item itemToUpdate = ownerr.getItemById(itemId);
                 if (itemToUpdate != null) {
                   String newName = viewer.getInput("Enter new name: ");
                   String newDescription = viewer.getInput("Enter new description: ");
@@ -249,69 +250,71 @@ public void displayItemContracts() {
                 } else {
                   viewer.displayMessage("Item not found.");
                 }
-                  } else {
-                  viewer.displayMessage("Member not found.");
-                }
-                break;
-
-              case 5:
-                //list item contracts.
-                displayItemContracts();
-                break;
+              } else {
+                viewer.displayMessage("Member not found.");
               }
+              break;
 
-        //break for case 2.
+            case 5:
+              // list item contracts.
+              displayItemContracts();
+              break;
+          }
+
+          // break for case 2.
           break;
-            
-      case 3:
+
+        case 3:
           // Create a new contract
-    String lenderId = viewer.getStringInput("Enter the lender ID: ");
-    Member lender = memberlist.getMemberById(lenderId);
+          String lenderId = viewer.getStringInput("Enter the lender ID: ");
+          Member lender = memberlist.getMemberById(lenderId);
 
-    if (lender != null) {
-        String itemId = viewer.getStringInput("Enter the item ID: ");
-        Item item = lender.getItemById(itemId);
+          if (lender != null) {
+            String itemId = viewer.getStringInput("Enter the item ID: ");
+            Item item = lender.getItemById(itemId);
 
-        if (item != null) {
-            String borrowerId = viewer.getStringInput("Enter the borrower ID: ");
-            Member borrower = memberlist.getMemberById(borrowerId);
+            if (item != null) {
+              String borrowerId = viewer.getStringInput("Enter the borrower ID: ");
+              Member borrower = memberlist.getMemberById(borrowerId);
 
-            if (borrower != null) {
+              if (borrower != null) {
                 int startDate = viewer.getIntInput("Enter the start date: ");
                 int endDate = viewer.getIntInput("Enter the end date: ");
 
-                Contract contract = new Contract(item, lender, borrower, startDate, endDate);
-                if (contract.isValid()) {  // Add this method to check if the contract is valid
-                    item.addContract(contract);
-                    lender.addContract(contract);
-                    borrower.addContract(contract);
-                    viewer.displayMessage("Contract created successfully.");
+                Contract contract = new Contract(item, lender, borrower, startDate, endDate, null);
+                if (contract.isValid()) { // Add this method to check if the contract is valid
+                  item.addContract(contract);
+                  lender.addContract(contract);
+                  borrower.addContract(contract);
+                  viewer.displayMessage("Contract created successfully.");
                 } else {
-                    viewer.displayMessage("Failed to create contract. Check the entered details and try again.");
+                  viewer.displayMessage("Failed to create contract. Check the entered details and try again.");
                 }
-            } else {
+              } else {
                 viewer.displayMessage("Borrower not found.");
+              }
+            } else {
+              viewer.displayMessage("Item not found.");
             }
-        } else {
-            viewer.displayMessage("Item not found.");
-        }
-    } else {
-        viewer.displayMessage("Lender not found.");
-    }
+          } else {
+            viewer.displayMessage("Lender not found.");
+          }
           break;
 
-      case 4:
-        System.exit(0);
-            
-      default:
-        viewer.displayErrorMessage("Incorrect input. Please try again.");
+        case 4:
+        // Advance the day
+        time.advanceDay(); // Assuming your Time class has an advanceDay method
+        viewer.displayMessage("Day advanced successfully.");
+        break;
+          
+        case 5:
+          System.exit(0);
 
-      } 
+        default:
+          viewer.displayErrorMessage("Incorrect input. Please try again.");
+
+      }
     }
   }
-  
+
 }
-
-
-    
-

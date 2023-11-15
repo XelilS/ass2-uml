@@ -19,5 +19,5 @@ public class AlphaNumericGen {
       result.append(alphanumeric[new Random().nextInt(alphanumeric.length)]);
     }
     return result.toString();
-  } 
+  }
 }
