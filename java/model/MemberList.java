@@ -8,23 +8,26 @@ import java.util.Set;
 /**
  * Class used to keep track of member addition and deletion.
  */
-public class MemberList {
+public class MemberList implements Persistence {
 
-  //private List<Member> members = new ArrayList<>();
-  //private Set<String> registeredEmails = new HashSet<>();
-  //private Set<String> registeredMobiles = new HashSet<>();
+  // private List<Member> members = new ArrayList<>();
+  // private Set<String> registeredEmails = new HashSet<>();
+  // private Set<String> registeredMobiles = new HashSet<>();
   private Time time;
   private List<Member> members;
   private Set<String> registeredEmails;
   private Set<String> registeredMobiles;
 
-
+  /**
+   * Memberlist constructor.
+   */
   public MemberList() {
     this.members = new ArrayList<>();
     this.registeredEmails = new HashSet<>();
     this.registeredMobiles = new HashSet<>();
     this.time = new Time();
   }
+
   /**
    * Method to register a member if it is unique.
    */
@@ -154,11 +157,12 @@ public class MemberList {
   private boolean isMobileUnique(String mobile) {
     return !registeredMobiles.contains(mobile);
   }
+
   /**
    * get members.
    */
   public List<Member> getAllMembers() {
-    return members;
+    return new ArrayList<>(members);
   }
 
   /**
@@ -166,6 +170,39 @@ public class MemberList {
    */
   public Time getTime() {
     return time;
+  }
+
+  @Override
+  public void hardCodeMembers() {
+    // Create members
+    Member m1 = new Member("Alice", "alice@example.com", "123", generateMemberId(), time);
+    Member m2 = new Member("Bob", "bob@example.com", "321", generateMemberId(), time);
+    Member m3 = new Member("Sid", "sid@example.com", "332211", generateMemberId(), time);
+
+    // Add credits to members
+    m1.addCredits(330);
+    m2.addCredits(100);
+    m3.addCredits(100);
+
+    // Create items and add them to members
+    Item item1 = new Item("laptop", "performance laptop", "electronic", 50, time);
+    Item item2 = new Item("Bike", "A mountain bike", "Sports", 10, time);
+    m1.addItemToOwnedItems(item1);
+    m1.addItemToOwnedItems(item2);
+
+    // Add members to the member list
+    addMember(m1);
+    addMember(m2);
+    addMember(m3);
+  }
+
+  private String generateMemberId() {
+    AlphaNumericGen ran = new AlphaNumericGen();
+    String memberId;
+    do {
+      memberId = ran.generateAlphaNum(6);
+    } while (isMemberIdExists(memberId));
+    return memberId;
   }
 
 }

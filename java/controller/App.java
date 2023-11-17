@@ -1,14 +1,13 @@
 package controller;
 
-import java.lang.ModuleLayer.Controller;
-import model.Time;
-
 import javax.swing.text.View;
 import model.Contract;
 import model.Item;
 import model.Member;
 import model.MemberList;
+import model.Time;
 import view.Viewer;
+
 
 /**
  * Class app.
@@ -22,7 +21,6 @@ public class App {
 
     Viewer viewer = new Viewer();
     MemberList memberList = new MemberList();
-
     ControlTower controller = new ControlTower(viewer, memberList);
     controller.start();
   }

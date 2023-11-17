@@ -17,8 +17,6 @@ public class Member {
   private List<Contract> currentContracts;
   private Time time;
 
-  AlphaNumericGen ran = new AlphaNumericGen();
-
   /**
    * Member constructor.
    */
@@ -28,21 +26,38 @@ public class Member {
     this.email = email;
     this.mobile = mobile;
     this.credits = 0;
-    this.creationDate = time.getCurrentDay();
     this.ownedItems = new ArrayList<>();
     this.currentContracts = new ArrayList<>();
     this.time = time;
+
+    // Advance the day to the current day
+    time.advanceDay();
+    this.creationDate = time.getCurrentDay();
   }
 
+  /**
+   * ensures that a new version is returned in contract for safety.
+   */
+  public Member(Member other) {
+    this.memberId = other.memberId;
+    this.name = other.name;
+    this.email = other.email;
+    this.mobile = other.mobile;
+    this.credits = other.credits;
+    this.creationDate = time.getCurrentDay();
+    this.ownedItems = new ArrayList<>(other.ownedItems);
+    this.currentContracts = new ArrayList<>(other.currentContracts);
+    this.time = other.time;
+  }
 
   @Override
   public String toString() {
-    return "Member{" 
-    + "name='" + name + '\'' 
-    + ", email='" + email + '\'' 
-    + ", phone='" + mobile + '\'' 
-    + ", id='" + memberId + '\'' 
-    + '}';
+    return "Member{"
+        + "name='" + name + '\''
+        + ", email='" + email + '\''
+        + ", phone='" + mobile + '\''
+        + ", id='" + memberId + '\''
+        + '}';
   }
 
   // Getters
@@ -67,7 +82,7 @@ public class Member {
   }
 
   public List<Item> getOwnedItems() {
-    return ownedItems;
+    return new ArrayList<>(ownedItems);
   }
 
   public Integer getCreationDate() {
@@ -75,7 +90,7 @@ public class Member {
   }
 
   public List<Contract> getContracts() {
-    return currentContracts;
+    return new ArrayList<>(currentContracts);
   }
 
   // setters
@@ -100,7 +115,7 @@ public class Member {
   }
 
   public void setOwnedItems(List<Item> ownedItems) {
-    this.ownedItems = ownedItems;
+    this.ownedItems = new ArrayList<>(ownedItems);
   }
 
   public void setCreationDate(Integer creationDate) {
@@ -171,18 +186,27 @@ public class Member {
     return newItem;
   }
 
+  /**
+   * update member info.
+   */
   public void updateMemberInformation(String name, String email, String mobile) {
     this.name = name;
     this.email = email;
     this.mobile = mobile;
   }
 
+  /**
+   * addition of a contract.
+   */
   public void addContract(Contract contract) {
     currentContracts.add(contract);
     int totCost = (contract.getItem().getCostDaily() * (contract.getEndDate() - contract.getStartDate()));
     addCredits(-totCost);
   }
 
+  /**
+   * gets an item by its id.
+   */
   public Item getItemById(String itemId) {
     for (Item item : ownedItems) {
       if (item.getItemId().equals(itemId)) {

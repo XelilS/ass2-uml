@@ -1,15 +1,16 @@
 package controller;
 
-import javax.swing.text.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.text.View;
 import model.Contract;
 import model.Item;
 import model.Member;
 import model.MemberList;
-import view.Viewer;
 import model.Time;
+import view.Viewer;
+
 /**
  * setters and code changers.
  */
@@ -18,11 +19,22 @@ public class ControlTower {
   private MemberList memberlist;
   private Time time;
 
-  // constructor.
+  /**
+   * constructor.
+   */
   public ControlTower(Viewer viewer, MemberList memberList) {
     this.memberlist = new MemberList();
     this.viewer = new Viewer();
     this.time = memberList.getTime();
+
+    initializeMembers();
+  }
+
+  /**
+   * used to initialize and add the hardcoded members.
+   */
+  private void initializeMembers() {
+    memberlist.hardCodeMembers();
   }
 
   /**
@@ -153,20 +165,9 @@ public class ControlTower {
    */
   public void start() {
 
-    Member m1 = memberlist.memberCreation("Alice", "alice@example.com", "123");
-    Member m2 = memberlist.memberCreation("Bob", "bob@example.com", "321");
-    Member m3 = memberlist.memberCreation("Sid", "sid@example.com", "332211");
-
-    Item laptop = m1.createItem("laptop", "performance laptop", "electronic", 50);
-    Item bike = m1.createItem("Bike", "A mountain bike", "Sports", 10);
-
-    m1.addCredits(330);
-    m2.addCredits(100);
-    m3.addCredits(100);
-
+    boolean isRunning = true;
     viewer.initial();
-    Scanner scanner = new Scanner(System.in);
-    while (true) {
+    while (isRunning) {
       int choice = viewer.mainMenu();
       switch (choice) {
         case 1:
@@ -186,12 +187,14 @@ public class ControlTower {
                   // Case 1: View all members (with IDs)
                   viewer.listFullInfo(members);
                   break;
+
                 case 2:
                   // return to menu
                   break;
 
                 default:
                   viewer.displayErrorMessage("Incorrect input. Please try again.");
+                  break;
               }
               break;
             case 3:
@@ -215,10 +218,12 @@ public class ControlTower {
               break;
 
             case 7:
-              System.exit(0);
+              isRunning = false;
+              break;
 
             default:
               viewer.displayErrorMessage("Incorrect input. Please try again.");
+              break;
           }
           break;
         // case 1 done.
@@ -267,6 +272,11 @@ public class ControlTower {
               // list item contracts.
               displayItemContracts();
               break;
+
+            default:
+              viewer.displayErrorMessage("Incorrect input. Please try again.");
+              break;
+
           }
 
           // break for case 2.
@@ -319,10 +329,12 @@ public class ControlTower {
           break;
 
         case 5:
-          System.exit(0);
+          isRunning = false;
+          break;
 
         default:
           viewer.displayErrorMessage("Incorrect input. Please try again.");
+          break;
 
       }
     }

@@ -21,7 +21,7 @@ public class Time {
     currentDay++;
   }
 
-  // tostring.
+  // tostring
   public String toString() {
     return "" + currentDay;
   }

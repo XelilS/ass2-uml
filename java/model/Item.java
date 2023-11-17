@@ -28,10 +28,27 @@ public class Item {
     this.name = name;
     this.description = description;
     this.category = category;
-    this.dayCreation = time.getCurrentDay();
     this.costDaily = costDaily;
     this.contracts = new ArrayList<>();
     this.time = time;
+
+    // Advance the day to the current day
+    time.advanceDay();
+    this.dayCreation = time.getCurrentDay();
+  }
+
+  /**
+   * used to ensure a new copy of item is given when using getItem in my contract.
+   */
+  public Item(Item other) {
+    this.itemId = other.itemId;
+    this.name = other.name;
+    this.description = other.description;
+    this.category = other.category;
+    this.dayCreation = time.getCurrentDay();
+    this.costDaily = other.costDaily;
+    this.contracts = new ArrayList<>(other.contracts); // Creates a shallow copy of the contracts list
+    this.time = other.time;
   }
 
   /**
@@ -76,7 +93,7 @@ public class Item {
   }
 
   public List<Contract> getContracts() {
-    return contracts;
+    return new ArrayList<>(contracts);
   }
 
   // setters
@@ -109,6 +126,9 @@ public class Item {
     contracts.add(contract);
   }
 
+  /**
+   * checks availibility.
+   */
   public boolean isAvailable(int startDate, int endDate) {
     for (Contract contract : contracts) {
       if (!(endDate < contract.getStartDate() || startDate > contract.getEndDate())) {

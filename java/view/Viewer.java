@@ -1,5 +1,7 @@
 package view;
 
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +10,9 @@ import model.Item;
 import model.Member;
 import model.MemberList;
 
+/**
+ * class used to ensure MVC structure.
+ */
 public class Viewer {
   private Scanner sc;
 
@@ -19,7 +24,7 @@ public class Viewer {
    * Viewer.
    */
   public Viewer() {
-    this.sc = new Scanner(System.in);
+    this.sc = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
   }
 
   /**
@@ -29,14 +34,12 @@ public class Viewer {
     System.out.println(message);
   }
 
-  private final Scanner scanner = new Scanner(System.in);
-
   /**
    * used to get a string input.
    */
   public String getStringInput(String prompt) {
     System.out.print(prompt);
-    return scanner.next();
+    return sc.next();
   }
 
   /**
@@ -44,7 +47,7 @@ public class Viewer {
    */
   public int getIntInput(String prompt) {
     System.out.print(prompt);
-    return scanner.nextInt();
+    return sc.nextInt();
   }
 
   /**
@@ -66,7 +69,7 @@ public class Viewer {
    */
   public String getMemberId() {
     System.out.print("Enter the ID of the member who owns the item: ");
-    return scanner.next();
+    return sc.next();
   }
 
   /**
@@ -74,7 +77,7 @@ public class Viewer {
    */
   public String getItemId() {
     System.out.print("Enter the ID of the item to view: ");
-    return scanner.next();
+    return sc.next();
   }
 
   /**
@@ -126,7 +129,7 @@ public class Viewer {
     return choice;
   }
 
-    /**
+  /**
    * displays options.
    */
   public int menuIds() {
@@ -143,8 +146,7 @@ public class Viewer {
    */
   public String getInput(String prompt) {
     System.out.print(prompt);
-    Scanner scanner = new Scanner(System.in);
-    return scanner.next();
+    return sc.next();
   }
 
   /**
@@ -158,7 +160,7 @@ public class Viewer {
       System.out.println("Email: " + member.getEmail());
       System.out.println("Current Credits: " + member.getCredits());
       System.out.println("Number of Owned Items: " + member.getOwnedItems().size());
-      System.out.println(); // Add a blank line for separation
+      System.out.println();
     }
   }
 
@@ -189,26 +191,8 @@ public class Viewer {
           System.out.println("  No Contracts");
         }
       }
-      System.out.println(); // Add a blank line for separation
+      System.out.println();
     }
-  }
-
-  private Contract getContractForItem(Item item, List<Contract> contracts) {
-    for (Contract contract : contracts) {
-      if (contract.getItem().equals(item)) {
-        return contract;
-      }
-    }
-    return null; // Contract for the specified item not found
-  }
-
-  private Member getMemberById(Member member2, List<Member> members) {
-    for (Member member : members) {
-      if (member.getMemberId().equals(member2)) {
-        return member;
-      }
-    }
-    return null; // Member with the specified ID not found
   }
 
   /**
@@ -222,7 +206,6 @@ public class Viewer {
     System.out.println("Email: " + member.getEmail());
     System.out.println("Mobile: " + member.getMobile());
     System.out.println("Current Credits: " + member.getCredits());
-    // You can display other member information as needed
   }
 
   /**
@@ -235,7 +218,8 @@ public class Viewer {
       System.out.println("Member Id: " + member.getMemberId());
       System.out.println("Name: " + member.getName());
       System.out.println("Email: " + member.getEmail());
-      System.out.println(); // Add a blank line for separation
+      System.out.println("Creation date: " + member.getCreationDate());
+      System.out.println();
     }
   }
 
@@ -252,7 +236,8 @@ public class Viewer {
         System.out.println("Item Description: " + item.getDescription());
         System.out.println("Item Category: " + item.getCategory());
         System.out.println("Item Cost Per Day: " + item.getCostDaily());
-        System.out.println(); // Add a blank line for separation
+        System.out.println("Item creation date: " + item.getDayCreation());
+        System.out.println();
       }
     }
   }
@@ -268,6 +253,7 @@ public class Viewer {
     System.out.println("Description: " + item.getDescription());
     System.out.println("Category: " + item.getCategory());
     System.out.println("Cost per day: " + item.getCostDaily());
+    System.out.println("Item creation date: " + item.getDayCreation());
 
     // Retrieve the owner's information using ownerId
     Member owner = memberList.getMemberById(item.getOwnerId());
@@ -287,7 +273,6 @@ public class Viewer {
         System.out.println("Lender: " + contract.getOwner());
         System.out.println("Start Date: " + contract.getStartDate());
         System.out.println("End Date: " + contract.getEndDate());
-        // ... (display other contract properties as needed)
         System.out.println("-----");
       }
     }

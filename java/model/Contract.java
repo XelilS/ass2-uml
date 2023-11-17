@@ -13,7 +13,6 @@ public class Contract {
   private Member borrower;
   private boolean status;
   private int cost;
-  private Time time;
 
   /**
    * Contract constructor.
@@ -37,14 +36,13 @@ public class Contract {
     }
 
     // Initialize the contract
-    this.item = item;
+    this.item = new Item(item);
     this.startDate = startDate;
     this.endDate = endDate;
-    this.lender = lender;
-    this.borrower = borrower;
+    this.lender = new Member(lender);
+    this.borrower = new Member(borrower);
     this.status = true;
     this.cost = item.getCostDaily() * (endDate - startDate + 1);
-    this.time = time;
 
     // Deduct credits from the lender
     lender.deductCredits(this.cost);
@@ -75,6 +73,10 @@ public class Contract {
    * checks the validity.
    */
   public boolean isValid() {
+    // check if item is null.
+    if (this.item == null) {
+      return false;
+    }
     // Check if the lender has enough credits
     int totalCost = item.getCostDaily() * (endDate - startDate + 1);
     if (lender.getCredits() < totalCost) {
@@ -97,7 +99,7 @@ public class Contract {
   // getters
 
   public Item getItem() {
-    return item;
+    return new Item(item);
   }
 
   public boolean getStatus() {
@@ -113,17 +115,17 @@ public class Contract {
   }
 
   public Member getborrower() {
-    return borrower;
+    return new Member(borrower);
   }
 
   public Member getOwner() {
-    return lender;
+    return new Member(lender); // Assuming Member has a copy constructor
   }
 
   // setters
 
   public void setItem(Item item) {
-    this.item = item;
+    this.item = new Item(item);
   }
 
   public void setEndDate(int endDate) {
