@@ -1,9 +1,6 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import javax.swing.text.View;
 import model.Contract;
 import model.Item;
 import model.Member;
@@ -47,7 +44,7 @@ public class ControlTower {
 
     // Check if the email or mobile number already exists
     if (memberlist.isEmailOrMobileExists(email, mobile)) {
-      viewer.displayMessage("Error: A member with this email or mobile number already exists.");
+      viewer.displayMessage("A member with this email or mobile number already exists.");
     } else {
       memberlist.memberCreation(name, email, mobile);
       viewer.displayMessage("Member created successfully.");

@@ -1,11 +1,6 @@
 package controller;
 
-import javax.swing.text.View;
-import model.Contract;
-import model.Item;
-import model.Member;
 import model.MemberList;
-import model.Time;
 import view.Viewer;
 
 

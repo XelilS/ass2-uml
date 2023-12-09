@@ -2,7 +2,6 @@ package view;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import model.Contract;

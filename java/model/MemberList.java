@@ -10,9 +10,6 @@ import java.util.Set;
  */
 public class MemberList implements Persistence {
 
-  // private List<Member> members = new ArrayList<>();
-  // private Set<String> registeredEmails = new HashSet<>();
-  // private Set<String> registeredMobiles = new HashSet<>();
   private Time time;
   private List<Member> members;
   private Set<String> registeredEmails;
@@ -49,19 +46,18 @@ public class MemberList implements Persistence {
    */
   public Member memberCreation(String name, String email, String mobile) {
     String memberId;
-    AlphaNumericGen ran = new AlphaNumericGen(); // Assuming you have a class for generating random alphanumeric strings
+    AlphaNumericGen ran = new AlphaNumericGen();
 
     do {
       memberId = ran.generateAlphaNum(6); // Generate a new ID
     } while (isMemberIdExists(memberId)); // Check if the ID already exists
     Member member = new Member(name, email, mobile, memberId, time);
     members.add(member);
-    return member; // Assuming Member constructor takes these parameters
+    return member;
   }
 
   private boolean isMemberIdExists(String memberId) {
-    // Iterate over your member list to check if memberId already exists
-    for (Member member : members) { // Assuming memberList is your list of members
+    for (Member member : members) {
       if (member.getMemberId().equals(memberId)) {
         return true; // ID already exists
       }
