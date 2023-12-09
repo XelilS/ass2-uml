@@ -30,8 +30,6 @@ public class Member {
     this.currentContracts = new ArrayList<>();
     this.time = time;
 
-    // Advance the day to the current day
-    time.advanceDay();
     this.creationDate = time.getCurrentDay();
   }
 
@@ -48,16 +46,6 @@ public class Member {
     this.ownedItems = new ArrayList<>(other.ownedItems);
     this.currentContracts = new ArrayList<>(other.currentContracts);
     this.time = other.time;
-  }
-
-  @Override
-  public String toString() {
-    return "Member{"
-        + "name='" + name + '\''
-        + ", email='" + email + '\''
-        + ", phone='" + mobile + '\''
-        + ", id='" + memberId + '\''
-        + '}';
   }
 
   // Getters
@@ -172,9 +160,8 @@ public class Member {
   /**
    * Method to create an item for the member and add 100 credits.
    */
-  public Item createItem(String itemName, String itemDescription, String itemCategory,
-      int itemCostDaily) {
-    // Create the item
+  public Item createItem(String itemName, String itemDescription, String itemCategory, int itemCostDaily, Time time) {
+    // Create the item with the provided time object
     Item newItem = new Item(itemName, itemDescription, itemCategory, itemCostDaily, time);
 
     // Add 100 credits to the member
@@ -184,7 +171,8 @@ public class Member {
     ownedItems.add(newItem);
 
     return newItem;
-  }
+}
+
 
   /**
    * update member info.

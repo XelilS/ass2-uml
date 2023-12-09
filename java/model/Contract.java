@@ -57,18 +57,6 @@ public class Contract {
     return true;
   }
 
-  @Override
-  public String toString() {
-    return "Contract{"
-        + "item=" + item
-        + ", cost=" + cost
-        + ", startDate=" + startDate
-        + ", endDate=" + endDate
-        + ", lender=" + lender.getName()
-        + ", borrower=" + borrower.getName()
-        + '}';
-  }
-
   /**
    * checks the validity.
    */

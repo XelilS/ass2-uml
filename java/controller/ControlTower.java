@@ -111,12 +111,19 @@ public class ControlTower {
     Member owner = memberlist.getMemberById(ownerId);
 
     if (owner != null) {
-      owner.createItem(itemName, itemDescription, itemCategory, itemCost);
-      viewer.displayMessage("Item created successfully!");
+        // Ensure that the time object is initialized
+        if (this.time == null) {
+            this.time = new Time(); // Initialize the Time object
+        }
+
+        // Now pass the time object to the createItem method
+        owner.createItem(itemName, itemDescription, itemCategory, itemCost, this.time);
+        viewer.displayMessage("Item created successfully!");
     } else {
-      viewer.displayMessage("Member not found with ID: " + ownerId);
+        viewer.displayMessage("Member not found with ID: " + ownerId);
     }
-  }
+}
+
 
   /**
    * used to delete an item.

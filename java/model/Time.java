@@ -7,7 +7,7 @@ public class Time {
   // attribute(s)
   private int currentDay;
 
-  Time() {
+  public Time() {
     currentDay = 0;
   }
 
