@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class for creating the contract.
  */
@@ -13,6 +16,8 @@ public class Contract {
   private Member borrower;
   private boolean status;
   private int cost;
+  private Time time;
+  private List<Observer> observers = new ArrayList<>();
 
   /**
    * Contract constructor.
@@ -36,16 +41,33 @@ public class Contract {
     }
 
     // Initialize the contract
-    this.item = new Item(item);
+    this.item = item;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.lender = new Member(lender);
-    this.borrower = new Member(borrower);
+    this.lender = lender;
+    this.borrower = borrower;
     this.status = true;
     this.cost = item.getCostDaily() * (endDate - startDate + 1);
+    this.time = time;
+
+    // Notify observers when a contract is created (and thus, takes effect)
+    notifyObservers("Contract for " + item.getItemName() + " has taken effect.");
 
     // Deduct credits from the lender
     lender.deductCredits(this.cost);
+  }
+
+  public void attach(Observer observer) {
+    observers.add(observer);
+  }
+
+  /**
+   * Used to notify observers.
+   */
+  public void notifyObservers(String message) {
+    for (Observer observer : observers) {
+      observer.update(message);
+    }
   }
 
   private boolean isItemAvailable(Item item, int startDate, int endDate) {
@@ -87,7 +109,7 @@ public class Contract {
   // getters
 
   public Item getItem() {
-    return new Item(item);
+    return item;
   }
 
   public boolean getStatus() {
@@ -103,17 +125,17 @@ public class Contract {
   }
 
   public Member getborrower() {
-    return new Member(borrower);
+    return borrower;
   }
 
   public Member getOwner() {
-    return new Member(lender); // Assuming Member has a copy constructor
+    return lender; // Assuming Member has a copy constructor
   }
 
   // setters
 
   public void setItem(Item item) {
-    this.item = new Item(item);
+    this.item = item;
   }
 
   public void setEndDate(int endDate) {

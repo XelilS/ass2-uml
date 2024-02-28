@@ -1,12 +1,17 @@
 package controller;
 
+import controller.ItemSearchContext;
 import java.util.List;
 import model.Contract;
+import model.EventLogger;
 import model.Item;
 import model.Member;
 import model.MemberList;
+import model.SearchByMaxPrice;
+import model.SearchByName;
 import model.Time;
 import view.Viewer;
+
 
 /**
  * setters and code changers.
@@ -15,14 +20,15 @@ public class ControlTower {
   private Viewer viewer;
   private MemberList memberlist;
   private Time time;
+  private EventLogger eventLogger = new EventLogger();
 
   /**
    * constructor.
    */
-  public ControlTower(Viewer viewer, MemberList memberList) {
-    this.memberlist = new MemberList();
+  public ControlTower(Viewer viewer, MemberList memberList, Time time) {
+    this.memberlist = new MemberList(time);
     this.viewer = new Viewer();
-    this.time = memberList.getTime();
+    this.time = time;
 
     initializeMembers();
   }
@@ -99,6 +105,35 @@ public class ControlTower {
   }
 
   /**
+   * NEW SEARCH ENGINE STRATEGY PATTERN.
+   */
+  public void searchItems() {
+    ItemSearchContext searchContext = new ItemSearchContext();
+    viewer.displayMessage("Search by: \n1. Name\n2. Max Price");
+    int choice = viewer.getIntInput("Choose an option: ");
+    String criterion = viewer.getStringInput("Enter search criterion: ");
+
+    switch (choice) {
+      case 1:
+        searchContext.setStrategy(new SearchByName());
+        break;
+      case 2:
+        searchContext.setStrategy(new SearchByMaxPrice());
+        break;
+      default:
+        viewer.displayErrorMessage("Invalid search option.");
+        return;
+    }
+
+    List<Item> results = searchContext.executeSearch(memberlist.getAllItems(), criterion);
+    if (results.isEmpty()) {
+      viewer.displayMessage("No items found.");
+    } else {
+      viewer.displayItems(results);
+    }
+  }
+
+  /**
    * used to create an item for a member.
    */
   public void createItem() {
@@ -111,19 +146,18 @@ public class ControlTower {
     Member owner = memberlist.getMemberById(ownerId);
 
     if (owner != null) {
-        // Ensure that the time object is initialized
-        if (this.time == null) {
-            this.time = new Time(); // Initialize the Time object
-        }
+      // Ensure that the time object is initialized
+      if (this.time == null) {
+        this.time = new Time(); // Initialize the Time object
+      }
 
-        // Now pass the time object to the createItem method
-        owner.createItem(itemName, itemDescription, itemCategory, itemCost, this.time);
-        viewer.displayMessage("Item created successfully!");
+      // Now pass the time object to the createItem method
+      owner.createItem(itemName, itemDescription, itemCategory, itemCost, this.time);
+      viewer.displayMessage("Item created successfully!");
     } else {
-        viewer.displayMessage("Member not found with ID: " + ownerId);
+      viewer.displayMessage("Member not found with ID: " + ownerId);
     }
-}
-
+  }
 
   /**
    * used to delete an item.
@@ -304,6 +338,9 @@ public class ControlTower {
                 int endDate = viewer.getIntInput("Enter the end date: ");
 
                 Contract contract = new Contract(item, lender, borrower, startDate, endDate, time);
+                EventLogger logger = new EventLogger();
+                contract.attach(logger);
+
                 if (contract.isValid()) { // Add this method to check if the contract is valid
                   item.addContract(contract);
                   lender.addContract(contract);
@@ -325,15 +362,43 @@ public class ControlTower {
 
         case 4:
           // Advance the day
-          time.advanceDay(); // Assuming your Time class has an advanceDay method
+          time.advanceDay();
           viewer.displayMessage("Day advanced successfully.");
-          int currentDay = time.getCurrentDay(); // Assuming 'time' is an instance of your Time class
+          int currentDay = time.getCurrentDay();
           viewer.displayMessage("Current day: " + currentDay);
+
+          // Initialize the EventLogger
+          EventLogger eventLogger = new EventLogger();
+
+          // Loop through all members
+          for (Member member : memberlist.getAllMembers()) {
+            // Loop through all items owned by the member
+            for (Item item : member.getOwnedItems()) {
+              // Loop through all contracts associated with the item
+              for (Contract contract : item.getContracts()) {
+                // Check if a contract starts today
+                if (contract.getStartDate() == currentDay) {
+                  eventLogger.update(
+                      "Contract for item " + item.getItemName() + " starts today. Item ID: " + item.getItemId());
+                }
+                // Check if a contract ends today
+                if (contract.getEndDate() == currentDay) {
+                  eventLogger
+                      .update("Contract for item " + item.getItemName() + " ends today. Item ID: " + item.getItemId());
+                }
+              }
+            }
+          }
 
           break;
 
         case 5:
           isRunning = false;
+          break;
+
+        case 6:
+          // Search items
+          searchItems();
           break;
 
         default:

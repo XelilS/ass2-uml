@@ -32,23 +32,7 @@ public class Item {
     this.contracts = new ArrayList<>();
     this.time = time;
 
-    // Advance the day to the current day
-    time.advanceDay();
     this.dayCreation = time.getCurrentDay();
-  }
-
-  /**
-   * used to ensure a new copy of item is given when using getItem in my contract.
-   */
-  public Item(Item other) {
-    this.itemId = other.itemId;
-    this.name = other.name;
-    this.description = other.description;
-    this.category = other.category;
-    this.dayCreation = time.getCurrentDay();
-    this.costDaily = other.costDaily;
-    this.contracts = new ArrayList<>(other.contracts); // Creates a shallow copy of the contracts list
-    this.time = other.time;
   }
 
   /**

@@ -33,21 +33,6 @@ public class Member {
     this.creationDate = time.getCurrentDay();
   }
 
-  /**
-   * ensures that a new version is returned in contract for safety.
-   */
-  public Member(Member other) {
-    this.memberId = other.memberId;
-    this.name = other.name;
-    this.email = other.email;
-    this.mobile = other.mobile;
-    this.credits = other.credits;
-    this.creationDate = time.getCurrentDay();
-    this.ownedItems = new ArrayList<>(other.ownedItems);
-    this.currentContracts = new ArrayList<>(other.currentContracts);
-    this.time = other.time;
-  }
-
   // Getters
   public String getMemberId() {
     return memberId;
@@ -171,8 +156,7 @@ public class Member {
     ownedItems.add(newItem);
 
     return newItem;
-}
-
+  }
 
   /**
    * update member info.

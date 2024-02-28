@@ -20,6 +20,19 @@ public class Viewer {
   }
 
   /**
+   * Strategy pattern implementation.
+   */
+  public void displayItems(List<Item> items) {
+    System.out.println("----------------------");
+    System.out.println("List of Items:");
+    for (Item item : items) {
+      System.out.println("Item Name: " + item.getItemName());
+      System.out.println("Item Cost: " + item.getCostDaily());
+      System.out.println("-------------------");
+    }
+  }
+
+  /**
    * Viewer.
    */
   public Viewer() {
@@ -90,6 +103,7 @@ public class Viewer {
     System.out.println("3.Create contract");
     System.out.println("4.Advance day");
     System.out.println("5.Exit");
+    System.out.println("6.Search items");
     System.out.println("Any other number = back to main menu.");
     int choice = sc.nextInt();
     return choice;

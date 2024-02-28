@@ -18,11 +18,22 @@ public class MemberList implements Persistence {
   /**
    * Memberlist constructor.
    */
-  public MemberList() {
+  public MemberList(Time time) {
     this.members = new ArrayList<>();
     this.registeredEmails = new HashSet<>();
     this.registeredMobiles = new HashSet<>();
-    this.time = new Time();
+    this.time = time;
+  }
+
+  /**
+   * New strategy pattern method.
+   */
+  public List<Item> getAllItems() {
+    List<Item> allItems = new ArrayList<>();
+    for (Member member : members) {
+      allItems.addAll(member.getOwnedItems());
+    }
+    return allItems;
   }
 
   /**
@@ -113,7 +124,13 @@ public class MemberList implements Persistence {
   public boolean changeMemberInformation(String memberId, String newName, String newEmail, String newMobile) {
     for (Member member : members) {
       if (member.getMemberId().equals(memberId)) {
-        // Found the member; update their information
+        // Check if the new email and mobile are unique
+        if (!isEmailUniqueC(newEmail, memberId) || !isMobileUniqueC(newMobile, memberId)) {
+          // Email or mobile is not unique; information change failed
+          return false;
+        }
+
+        // Update member information
         member.setName(newName);
         member.setEmail(newEmail);
         member.setMobile(newMobile);
@@ -154,6 +171,32 @@ public class MemberList implements Persistence {
     return !registeredMobiles.contains(mobile);
   }
 
+  // New helper methods for uniqueness when changing info.
+
+  /**
+   * ensures uniqueness when changing info.
+   */
+  private boolean isEmailUniqueC(String email, String memberId) {
+    for (Member member : members) {
+      if (!member.getMemberId().equals(memberId) && member.getEmail().equalsIgnoreCase(email)) {
+        return false; // Email is not unique
+      }
+    }
+    return true;
+  }
+
+  /**
+   * ensures uniqueness when changing info.
+   */
+  private boolean isMobileUniqueC(String mobile, String memberId) {
+    for (Member member : members) {
+      if (!member.getMemberId().equals(memberId) && member.getMobile().equals(mobile)) {
+        return false; // Mobile is not unique
+      }
+    }
+    return true;
+  }
+
   /**
    * get members.
    */
@@ -182,7 +225,7 @@ public class MemberList implements Persistence {
 
     // Create items and add them to members
     Item item1 = new Item("laptop", "performance laptop", "electronic", 50, time);
-    Item item2 = new Item("Bike", "A mountain bike", "Sports", 10, time);
+    Item item2 = new Item("lappar", "A mountain bike", "Sports", 10, time);
     m1.addItemToOwnedItems(item1);
     m1.addItemToOwnedItems(item2);
 
